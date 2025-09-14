@@ -80,9 +80,16 @@ export function Terminal() {
         setInput("");
         return; // prevent adding to history
     } else if (command === 'solve') {
-        newOutput.push({ type: "error", content: "The 'solve' command is no longer needed. The puzzle is solved automatically after uploading." });
+        if (imageFile) {
+            newOutput.push({ type: "response", content: "Solving puzzle, please wait..." });
+            const formData = new FormData();
+            formData.append("image", imageFile);
+            formAction(formData);
+        } else {
+            newOutput.push({ type: "error", content: "No image uploaded. Please use the 'upload' command first." });
+        }
     } else {
-      newOutput.push({ type: "error", content: `Command not found: ${command}. Available commands: start, upload, download, clear` });
+      newOutput.push({ type: "error", content: `Command not found: ${command}. Available commands: start, upload, solve, download, clear` });
     }
 
     setOutput(newOutput);
@@ -95,11 +102,8 @@ export function Terminal() {
       setImageFile(file);
       setOutput((prev) => [
         ...prev,
-        { type: "response", content: `File selected: ${file.name}. Solving puzzle, please wait...` },
+        { type: "response", content: `File selected: ${file.name}. Type 'solve' to process the image.` },
       ]);
-      const formData = new FormData();
-      formData.append("image", file);
-      formAction(formData);
     }
   };
 
