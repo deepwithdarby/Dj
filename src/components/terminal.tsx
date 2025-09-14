@@ -113,11 +113,11 @@ export function Terminal() {
   };
 
   return (
-    <div className="w-full max-w-4xl h-[80vh] bg-[#0d1117] rounded-lg border border-gray-700 shadow-2xl flex flex-col font-code">
+    <div className="w-full max-w-4xl h-[80vh] bg-background rounded-lg border border-gray-700 shadow-2xl flex flex-col font-code">
       <div className="flex-shrink-0 bg-gray-800/50 p-3 flex items-center justify-between border-b border-gray-700 rounded-t-lg">
         <div className="flex items-center gap-2">
-            <TerminalIcon className="w-5 h-5 text-green-400" />
-            <span className="text-sm font-semibold">SudoSolve CLI</span>
+            <TerminalIcon className="w-5 h-5 text-primary" />
+            <span className="text-sm font-semibold text-foreground">SudoSolve CLI</span>
         </div>
         <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -130,11 +130,11 @@ export function Terminal() {
           <div key={index} className="mb-2">
             {line.type === "command" && (
               <div className="flex items-center">
-                <span className="text-green-400 mr-2">$</span>
-                <span>{line.content}</span>
+                <span className="text-primary mr-2">$</span>
+                <span className="text-foreground">{line.content}</span>
               </div>
             )}
-            {line.type === "response" && <p className="text-gray-300">{line.content}</p>}
+            {line.type === "response" && <p className="text-foreground">{line.content}</p>}
             {line.type === "error" && <p className="text-red-400">Error: {line.content}</p>}
             {line.type === "image" && typeof line.content === 'string' && (
               <div className="mt-2 w-48">
@@ -147,8 +147,8 @@ export function Terminal() {
 
         {isPending && (
             <div className="flex items-center">
-                <Loader2 className="w-4 h-4 text-green-400 animate-spin mr-2" />
-                <span className="text-gray-300">Processing...</span>
+                <Loader2 className="w-4 h-4 text-primary animate-spin mr-2" />
+                <span className="text-foreground">Processing...</span>
             </div>
         )}
 
@@ -156,13 +156,13 @@ export function Terminal() {
       </div>
       <div className="flex-shrink-0 p-2 border-t border-gray-700">
         <form onSubmit={handleCommand} className="flex items-center">
-          <span className="text-green-400 mr-2">$</span>
+          <span className="text-primary mr-2">$</span>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="w-full bg-transparent focus:outline-none"
+            className="w-full bg-transparent text-foreground focus:outline-none"
             autoComplete="off"
             disabled={isPending}
           />

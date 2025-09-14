@@ -12,7 +12,7 @@ export default {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
-        code: ['"Fira Code"', 'monospace'],
+        code: ['"Special Elite"', 'monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',

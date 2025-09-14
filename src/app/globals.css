@@ -5,15 +5,15 @@
 @layer base {
   :root {
     --background: 0 0% 8%; /* Dark background for terminal */
-    --foreground: 0 0% 98%;
+    --foreground: 142 76% 46%;
     --card: 0 0% 12%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 142 76% 46%;
     --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover-foreground: 142 76% 46%;
     --primary: 142 76% 46%; /* Green for text */
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary-foreground: 142 76% 46%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 142 76% 46%;
@@ -28,15 +28,15 @@
 
   .dark {
     --background: 0 0% 8%;
-    --foreground: 0 0% 98%;
+    --foreground: 142 76% 46%;
     --card: 0 0% 12%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 142 76% 46%;
     --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover-foreground: 142 76% 46%;
     --primary: 142 76% 46%;
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary-foreground: 142 76% 46%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 142 76% 46%;
