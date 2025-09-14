@@ -162,29 +162,30 @@ export function Terminal() {
         ))}
 
         {isPending && (
-            <div className="w-full max-w-xs">
+            <div className="w-full max-w-xs my-2">
                 <Progress value={progress} className="h-2 bg-gray-700"/>
                 <span className="text-foreground text-xs mt-1">Processing...</span>
             </div>
         )}
+        
+        {!isPending && (
+            <form onSubmit={handleCommand} className="flex items-center">
+                <span className="text-primary mr-2">$</span>
+                <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="w-full bg-transparent text-foreground focus:outline-none"
+                    autoComplete="off"
+                    disabled={isPending}
+                />
+            </form>
+        )}
 
         <div ref={endOfOutputRef} />
       </div>
-      <div className="flex-shrink-0 p-2 border-t border-gray-700">
-        <form onSubmit={handleCommand} className="flex items-center">
-          <span className="text-primary mr-2">$</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="w-full bg-transparent text-foreground focus:outline-none"
-            autoComplete="off"
-            disabled={isPending}
-          />
-        </form>
-        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-      </div>
+       <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
     </div>
   );
 }
