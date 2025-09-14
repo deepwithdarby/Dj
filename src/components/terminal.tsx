@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useActionState } from "react";
 import { solveSudoku } from "@/app/actions";
 import Image from "next/image";
-import { Terminal as TerminalIcon, Loader2 } from "lucide-react";
+import { Terminal as TerminalIcon, Facebook, Instagram, Twitter } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 type OutputLine = {
@@ -15,6 +15,24 @@ const initialState: { solvedImageUrl: string | null; error: string | null } = {
   solvedImageUrl: null,
   error: null,
 };
+
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+);
+
 
 export function Terminal() {
   const [state, formAction, isPending] = useActionState(solveSudoku, initialState);
@@ -136,6 +154,30 @@ export function Terminal() {
     }
   };
 
+  const handleShare = (platform: 'facebook' | 'instagram' | 'x' | 'whatsapp') => {
+    const url = 'https://sudosolvecli.vercel.app';
+    const text = 'Check out this cool Sudoku solver!';
+    let shareUrl = '';
+
+    switch (platform) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case 'x':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        break;
+      case 'whatsapp':
+        shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+        break;
+      case 'instagram':
+        // Instagram does not support direct sharing via web links.
+        // We can inform the user about this.
+        setOutput((prev) => [...prev, { type: "response", content: "Sharing on Instagram is not supported via web. You can copy the link and share it manually: https://sudosolvecli.vercel.app" }]);
+        return;
+    }
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="w-full h-screen bg-background flex flex-col font-code">
       <div className="flex-shrink-0 bg-gray-800/50 p-3 flex items-center justify-between border-b border-gray-700">
@@ -143,10 +185,11 @@ export function Terminal() {
             <TerminalIcon className="w-5 h-5 text-primary" />
             <span className="text-sm font-semibold text-foreground">SudoSolve CLI</span>
         </div>
-        <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+        <div className="flex items-center gap-4 text-foreground">
+          <Facebook className="w-5 h-5 cursor-pointer hover:text-primary" onClick={() => handleShare('facebook')} />
+          <Instagram className="w-5 h-5 cursor-pointer hover:text-primary" onClick={() => handleShare('instagram')} />
+          <Twitter className="w-5 h-5 cursor-pointer hover:text-primary" onClick={() => handleShare('x')} />
+          <WhatsAppIcon className="w-5 h-5 cursor-pointer hover:text-primary" onClick={() => handleShare('whatsapp')} />
         </div>
       </div>
       <div className="flex-grow p-4 overflow-y-auto" onClick={() => inputRef.current?.focus()}>
