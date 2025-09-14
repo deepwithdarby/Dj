@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useActionState } from "react";
 import { solveSudoku } from "@/app/actions";
 import Image from "next/image";
-import { Terminal as TerminalIcon, Upload, Download, Loader2 } from "lucide-react";
+import { Terminal as TerminalIcon, Loader2 } from "lucide-react";
 
 type OutputLine = {
   type: "command" | "response" | "error" | "image" | "component";
@@ -24,8 +24,7 @@ export function Terminal() {
   ]);
   const [isStarted, setIsStarted] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const endOfOutputRef = useRef<HTMLDivElement>(null);
@@ -48,11 +47,10 @@ export function Terminal() {
             { type: "response", content: "Puzzle solved successfully! Type 'download' to save the image." },
             { type: "image", content: state.solvedImageUrl },
         ]);
-        setImagePreview(null);
         setImageFile(null);
     }
   }, [state]);
-
+  
   const handleCommand = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const command = input.trim().toLowerCase();
@@ -65,15 +63,6 @@ export function Terminal() {
         newOutput.push({ type: "error", content: "Please type 'start' first to initialize." });
     } else if (command === "upload") {
       fileInputRef.current?.click();
-    } else if (command === "solve") {
-      if (!imageFile) {
-        newOutput.push({ type: "error", content: "No image uploaded. Please use the 'upload' command first." });
-      } else {
-        const formData = new FormData();
-        formData.append("image", imageFile);
-        formAction(formData);
-        newOutput.push({ type: "response", content: "Solving puzzle..." });
-      }
     } else if (command === "download") {
         if(state.solvedImageUrl) {
             const link = document.createElement('a');
@@ -90,8 +79,10 @@ export function Terminal() {
         setOutput([]);
         setInput("");
         return; // prevent adding to history
+    } else if (command === 'solve') {
+        newOutput.push({ type: "error", content: "The 'solve' command is no longer needed. The puzzle is solved automatically after uploading." });
     } else {
-      newOutput.push({ type: "error", content: `Command not found: ${command}. Available commands: start, upload, solve, download, clear` });
+      newOutput.push({ type: "error", content: `Command not found: ${command}. Available commands: start, upload, download, clear` });
     }
 
     setOutput(newOutput);
@@ -102,19 +93,19 @@ export function Terminal() {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      const preview = URL.createObjectURL(file);
-      setImagePreview(preview);
       setOutput((prev) => [
         ...prev,
-        { type: "response", content: `File selected: ${file.name}. Type 'solve' to proceed.` },
-        { type: "image", content: preview },
+        { type: "response", content: `File selected: ${file.name}. Solving puzzle, please wait...` },
       ]);
+      const formData = new FormData();
+      formData.append("image", file);
+      formAction(formData);
     }
   };
 
   return (
-    <div className="w-full max-w-4xl h-[80vh] bg-background rounded-lg border border-gray-700 shadow-2xl flex flex-col font-code">
-      <div className="flex-shrink-0 bg-gray-800/50 p-3 flex items-center justify-between border-b border-gray-700 rounded-t-lg">
+    <div className="w-full h-screen bg-background flex flex-col font-code">
+      <div className="flex-shrink-0 bg-gray-800/50 p-3 flex items-center justify-between border-b border-gray-700">
         <div className="flex items-center gap-2">
             <TerminalIcon className="w-5 h-5 text-primary" />
             <span className="text-sm font-semibold text-foreground">SudoSolve CLI</span>
