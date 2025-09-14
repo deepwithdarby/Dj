@@ -145,7 +145,7 @@ export function Terminal() {
       setImageFile(file);
       setOutput((prev) => [
         ...prev,
-        { type: "response", content: `File selected: ${file.name}. Type 'solve' to process the image.` },
+        { type: "response", content: `File selected: ${file.name}. Type 'solve' to process the image and WAIT SOMETIME.` },
       ]);
     }
     // Reset file input to allow uploading the same file again
