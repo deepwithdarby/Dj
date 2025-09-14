@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useActionState } from "react";
 import { solveSudoku } from "@/app/actions";
 import Image from "next/image";
 import { Terminal as TerminalIcon, Loader2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 type OutputLine = {
   type: "command" | "response" | "error" | "image" | "component";
@@ -24,6 +25,7 @@ export function Terminal() {
   ]);
   const [isStarted, setIsStarted] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [progress, setProgress] = useState(0);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +38,25 @@ export function Terminal() {
   useEffect(() => {
     endOfOutputRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [output, isPending]);
+
+  useEffect(() => {
+    if (isPending) {
+      setProgress(0);
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(timer);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 500);
+      return () => clearInterval(timer);
+    } else {
+        setProgress(100);
+        setTimeout(() => setProgress(0), 1000); 
+    }
+  }, [isPending]);
 
   useEffect(() => {
     if (state.error) {
@@ -78,7 +99,7 @@ export function Terminal() {
     } else if (command === 'clear') {
         setOutput([]);
         setInput("");
-        return; // prevent adding to history
+        return; 
     } else if (command === 'solve') {
         if (imageFile) {
             newOutput.push({ type: "response", content: "Solving puzzle, please wait..." });
@@ -141,9 +162,9 @@ export function Terminal() {
         ))}
 
         {isPending && (
-            <div className="flex items-center">
-                <Loader2 className="w-4 h-4 text-primary animate-spin mr-2" />
-                <span className="text-foreground">Processing...</span>
+            <div className="w-full max-w-xs">
+                <Progress value={progress} className="h-2 bg-gray-700"/>
+                <span className="text-foreground text-xs mt-1">Processing...</span>
             </div>
         )}
 
