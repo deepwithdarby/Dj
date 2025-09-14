@@ -77,6 +77,14 @@ export function Terminal() {
     const command = input.trim().toLowerCase();
     const newOutput: OutputLine[] = [...output, { type: "command", content: input }];
 
+    if (command === 'clear') {
+        setOutput([{ type: "response", content: "Welcome to SudoSolve CLI. Type 'start' to begin." }]);
+        setInput("");
+        setIsStarted(false);
+        setImageFile(null);
+        return; 
+    }
+
     if (command === "start") {
       setIsStarted(true);
       newOutput.push({ type: "response", content: "SudoSolve is ready. Type 'upload' to select a Sudoku image." });
@@ -96,10 +104,6 @@ export function Terminal() {
         } else {
             newOutput.push({ type: "error", content: "No solved image to download. Please 'solve' a puzzle first." });
         }
-    } else if (command === 'clear') {
-        setOutput([]);
-        setInput("");
-        return; 
     } else if (command === 'solve') {
         if (imageFile) {
             newOutput.push({ type: "response", content: "Solving puzzle, please wait..." });
@@ -125,6 +129,10 @@ export function Terminal() {
         ...prev,
         { type: "response", content: `File selected: ${file.name}. Type 'solve' to process the image.` },
       ]);
+    }
+    // Reset file input to allow uploading the same file again
+    if(e.target) {
+        e.target.value = "";
     }
   };
 
